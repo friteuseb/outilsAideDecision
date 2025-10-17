@@ -1,4 +1,5 @@
 import { PrismaClient, UserRole, TemplateSecteur } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -216,14 +217,17 @@ async function main() {
   // 3. Créer des utilisateurs
   console.log('Creating users...')
 
+  // Hash password for all users (default: "password123")
+  const hashedPassword = await bcrypt.hash('password123', 10)
+
   const superAdmin = await prisma.user.create({
     data: {
       email: 'admin@outilsdecision.fr',
       nom: 'Admin',
       prenom: 'Super',
+      password: hashedPassword,
       role: UserRole.SUPER_ADMIN,
-      clientId: clientEcommerce.id,
-      supabaseId: 'super-admin-id' // À remplacer par l'ID Supabase réel
+      clientId: clientEcommerce.id
     }
   })
 
@@ -232,9 +236,9 @@ async function main() {
       email: 'admin@acme.fr',
       nom: 'Martin',
       prenom: 'Jean',
+      password: hashedPassword,
       role: UserRole.ADMIN,
-      clientId: clientEcommerce.id,
-      supabaseId: 'admin-acme-id'
+      clientId: clientEcommerce.id
     }
   })
 
@@ -243,9 +247,9 @@ async function main() {
       email: 'editor@acme.fr',
       nom: 'Dupont',
       prenom: 'Marie',
+      password: hashedPassword,
       role: UserRole.EDITOR,
-      clientId: clientEcommerce.id,
-      supabaseId: 'editor-acme-id'
+      clientId: clientEcommerce.id
     }
   })
 
@@ -254,9 +258,9 @@ async function main() {
       email: 'demo@demo.com',
       nom: 'Demo',
       prenom: 'User',
+      password: hashedPassword,
       role: UserRole.ADMIN,
-      clientId: clientDemo.id,
-      supabaseId: 'admin-demo-id'
+      clientId: clientDemo.id
     }
   })
 
