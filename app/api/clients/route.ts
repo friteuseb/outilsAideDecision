@@ -6,7 +6,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const slug = searchParams.get('slug')
 
-    // If slug is provided, return only that client
+    // If slug is provided, return only that client (as an array for consistency)
     if (slug) {
       const client = await prisma.client.findUnique({
         where: { slug },
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
         )
       }
 
-      return NextResponse.json(client)
+      return NextResponse.json([client])
     }
 
     // Otherwise return all clients
