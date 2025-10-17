@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Building2, Users, FolderKanban, Loader2 } from 'lucide-react'
 import type { ClientWithRelations } from '@/types'
 
@@ -41,7 +42,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Outils d'Aide à la Décision
+                Outils d&apos;Aide à la Décision
               </h1>
               <p className="mt-1 text-sm text-gray-600">
                 Plateforme de priorisation de backlog multi-clients
@@ -111,7 +112,7 @@ export default function HomePage() {
               <Building2 className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">Aucun client</h3>
               <p className="mt-2 text-sm text-gray-600">
-                Commencez par créer votre premier client depuis l'administration.
+                Commencez par créer votre premier client depuis l&apos;administration.
               </p>
               <div className="mt-6">
                 <Link
@@ -141,9 +142,11 @@ export default function HomePage() {
                       {/* Logo or Initial */}
                       <div className="flex items-center mb-4">
                         {client.logo ? (
-                          <img
+                          <Image
                             src={client.logo}
                             alt={client.nom}
+                            width={48}
+                            height={48}
                             className="h-12 w-12 rounded-lg object-contain"
                           />
                         ) : (
@@ -193,7 +196,7 @@ export default function HomePage() {
       <footer className="mt-16 bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-sm text-gray-600">
-            © 2025 Outils d'Aide à la Décision - Développé avec Next.js & Prisma
+            © 2025 Outils d&apos;Aide à la Décision - Développé avec Next.js & Prisma
           </p>
         </div>
       </footer>

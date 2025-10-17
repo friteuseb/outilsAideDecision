@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Download, Search, Settings2, Loader2 } from 'lucide-react'
 import type { Client, ProjectWithRelations } from '@/types'
 import { formatCurrency, calculateBudgetScore } from '@/lib/utils'
@@ -53,7 +54,7 @@ export default function ClientBacklogPage() {
   }, [slug])
 
   // Calculate project score
-  const calculateScore = (project: ProjectWithRelations): number => {
+  const calculateScore = useCallback((project: ProjectWithRelations): number => {
     const scores = project.scores as ProjectScores
     const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0)
 
@@ -72,7 +73,7 @@ export default function ClientBacklogPage() {
     )
 
     return rawScore / totalWeight
-  }
+  }, [weights])
 
   // Get priority label and color
   const getPriority = (score: number) => {
@@ -92,7 +93,7 @@ export default function ClientBacklogPage() {
         p.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
       .sort((a, b) => b.score - a.score)
-  }, [projects, weights, searchTerm])
+  }, [projects, calculateScore, searchTerm])
 
   // Selection stats
   const selectionStats = useMemo(() => {
@@ -212,7 +213,7 @@ export default function ClientBacklogPage() {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Client introuvable</h2>
           <Link href="/" className="text-blue-600 hover:text-blue-700">
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
       </div>
@@ -238,7 +239,7 @@ export default function ClientBacklogPage() {
                 <ArrowLeft className="w-5 h-5" />
               </Link>
               {client.logo && (
-                <img src={client.logo} alt={client.nom} className="h-10" />
+                <Image src={client.logo} alt={client.nom} width={120} height={40} className="h-10 w-auto object-contain" />
               )}
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{client.nom}</h1>
