@@ -17,14 +17,13 @@ Plateforme SaaS multi-clients de priorisation de backlog avec interface white-la
 - **Frontend** : Next.js 14 (App Router), React 19, TypeScript
 - **Backend** : Next.js API Routes
 - **Base de données** : PostgreSQL via Prisma ORM
-- **Auth** : Supabase Auth (à configurer)
 - **UI** : Tailwind CSS, Lucide Icons
-- **Hosting** : Vercel (recommandé)
+- **Hosting** : Railway, Vercel
 
 ## Prérequis
 
 - Node.js 20+ et npm
-- PostgreSQL 14+ (ou utiliser Supabase)
+- PostgreSQL 14+
 - Git
 
 ## Installation
@@ -44,16 +43,7 @@ npm install
 
 ### 3. Configurer la base de données
 
-#### Option A : Utiliser Supabase (recommandé)
-
-1. Créez un compte sur [supabase.com](https://supabase.com)
-2. Créez un nouveau projet
-3. Récupérez :
-   - `DATABASE_URL` : Settings > Database > Connection string (mode "Session")
-   - `NEXT_PUBLIC_SUPABASE_URL` : Settings > API > Project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` : Settings > API > anon public
-
-#### Option B : PostgreSQL local
+#### Option A : PostgreSQL local
 
 ```bash
 # Créer une base de données
@@ -63,6 +53,12 @@ createdb backlog_tool
 # postgresql://username:password@localhost:5432/backlog_tool
 ```
 
+#### Option B : Railway (production)
+
+1. Créez un compte sur [railway.app](https://railway.app)
+2. Ajoutez une base PostgreSQL à votre projet
+3. Récupérez la `DATABASE_URL` depuis les variables d'environnement
+
 ### 4. Configurer les variables d'environnement
 
 Créez un fichier `.env` à la racine :
@@ -70,11 +66,6 @@ Créez un fichier `.env` à la racine :
 ```env
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/backlog_tool?schema=public"
-
-# Supabase (si utilisé)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -189,7 +180,6 @@ npm run db:studio    # Ouvrir Prisma Studio (GUI)
   page.tsx             # Page d'accueil
 /lib
   prisma.ts            # Client Prisma
-  supabase.ts          # Client Supabase
   utils.ts             # Utilitaires
 /prisma
   schema.prisma        # Schéma de base de données
@@ -214,23 +204,31 @@ npm run db:studio    # Ouvrir Prisma Studio (GUI)
 - Un Project appartient à un Client et peut être basé sur un Template
 - Une Roadmap contient plusieurs Projects
 
-## Déploiement sur Vercel
+## Déploiement
+
+### Sur Railway (recommandé)
+
+1. Push votre code sur GitHub
+2. Connectez votre repo sur [railway.app](https://railway.app)
+3. Ajoutez une base PostgreSQL
+4. Configurez les variables d'environnement
+5. Railway détectera automatiquement Next.js et déploiera
+
+### Sur Vercel
 
 1. Push votre code sur GitHub
 2. Connectez votre repo sur [vercel.com](https://vercel.com)
-3. Configurez les variables d'environnement
+3. Configurez les variables d'environnement (incluant DATABASE_URL)
 4. Déployez !
 
-Vercel détectera automatiquement Next.js et configurera tout.
+## Authentification (à implémenter)
 
-## Authentification (à finaliser)
+L'authentification n'est pas encore implémentée. Prochaines étapes :
 
-L'authentification Supabase est prête mais pas encore activée. Pour l'activer :
-
-1. Configurez Supabase Auth dans votre projet
-2. Créez les middleware de protection de routes
-3. Ajoutez les pages de login/signup
-4. Liez les utilisateurs Supabase aux utilisateurs Prisma via `supabaseId`
+1. Choisir une solution d'auth (NextAuth.js, Clerk, Auth0, etc.)
+2. Créer les middleware de protection de routes
+3. Ajouter les pages de login/signup
+4. Implémenter la gestion des rôles utilisateurs
 
 ## Prochaines étapes (Roadmap)
 
@@ -256,4 +254,4 @@ Propriétaire - Tous droits réservés
 
 ---
 
-Powered by Next.js, Prisma, Supabase
+Développé avec Next.js 15, Prisma ORM, PostgreSQL
