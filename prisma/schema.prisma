@@ -1,0 +1,218 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modèle Client (Tenant) - Représente chaque organisation/client
+model Client {
+  id                String    @id @default(cuid())
+  nom               String
+  slug              String    @unique // Pour les sous-domaines (ex: acme.app.com)
+  logo              String?   // URL du logo
+  couleurPrimaire   String    @default("#3B82F6") // Couleur principale du thème
+  couleurSecondaire String    @default("#1E40AF") // Couleur secondaire
+  domaine           String?   // Domaine personnalisé optionnel
+
+  // Configuration scoring
+  criteresScoring   Json      @default("{\"impactBusiness\": {\"label\": \"Impact Business\", \"description\": \"Potentiel CA, croissance\", \"weight\": 50}, \"complexite\": {\"label\": \"Complexité\", \"description\": \"Complexité technique et organisationnelle\", \"weight\": 25}, \"budgetScore\": {\"label\": \"Budget\", \"description\": \"Score basé sur le budget\", \"weight\": 25}}") // Critères configurables
+
+  statut            ClientStatut @default(ACTIF)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  users             User[]
+  projects          Project[]
+  roadmaps          Roadmap[]
+
+  @@index([slug])
+}
+
+enum ClientStatut {
+  ACTIF
+  SUSPENDU
+  ARCHIVE
+}
+
+// Modèle Utilisateur
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  nom           String
+  prenom        String?
+  avatar        String?  // URL de l'avatar
+
+  role          UserRole @default(VIEWER)
+
+  // Multi-tenant : un utilisateur appartient à un client
+  clientId      String
+  client        Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Auth Supabase
+  supabaseId    String?  @unique // ID utilisateur Supabase
+
+  preferences   Json     @default("{}") // Préférences utilisateur (langue, thème, etc.)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  projectsCreated Project[] @relation("ProjectCreator")
+  projectsUpdated Project[] @relation("ProjectUpdater")
+
+  @@index([clientId])
+  @@index([email])
+  @@index([supabaseId])
+}
+
+enum UserRole {
+  SUPER_ADMIN     // Admin plateforme (vous)
+  ADMIN           // Admin client
+  EDITOR          // Peut éditer les projets
+  VIEWER          // Lecture seule
+}
+
+// Modèle Template de Projet (réutilisable)
+model Template {
+  id                String   @id @default(cuid())
+  titre             String
+  categorie         String
+  secteur           TemplateSecteur // e-commerce, B2B, retail, etc.
+  description       String   @db.Text
+
+  budgetMoyen       Int?     // Budget moyen en euros
+  delaiMoyen        Int?     // Délai en semaines
+
+  // Scores par défaut (JSON pour flexibilité)
+  scoresDefaults    Json     @default("{\"impactBusiness\": 5, \"complexite\": 5}")
+
+  kpiSuggeres       String[] // Liste de KPIs suggérés
+
+  isPublic          Boolean  @default(true) // Templates publics vs privés
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  projects          Project[]
+
+  @@index([secteur])
+}
+
+enum TemplateSecteur {
+  ECOMMERCE
+  B2B
+  RETAIL
+  MANUFACTURING
+  SERVICES
+  MARKETING
+  IT
+  AUTRE
+}
+
+// Modèle Projet
+model Project {
+  id                String   @id @default(cuid())
+
+  // Multi-tenant
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  titre             String
+  categorie         String
+  description       String   @db.Text
+
+  budget            Int      // Budget en euros
+  delaiSemaines     Int      // Délai en semaines
+  kpi               String
+
+  // Scores (JSON pour supporter les critères custom par client)
+  scores            Json     @default("{\"impactBusiness\": 5, \"complexite\": 5, \"budgetScore\": 5}")
+
+  additionalInfo    String?  @db.Text // Informations complémentaires
+
+  statut            ProjectStatut @default(BACKLOG)
+
+  // Template source (optionnel)
+  templateId        String?
+  template          Template? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  // Tracking
+  createdById       String
+  createdBy         User     @relation("ProjectCreator", fields: [createdById], references: [id])
+
+  updatedById       String?
+  updatedBy         User?    @relation("ProjectUpdater", fields: [updatedById], references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  roadmapProjects   RoadmapProject[]
+
+  @@index([clientId])
+  @@index([statut])
+  @@index([templateId])
+}
+
+enum ProjectStatut {
+  BACKLOG
+  EN_COURS
+  TERMINE
+  ARCHIVE
+  ANNULE
+}
+
+// Modèle Roadmap
+model Roadmap {
+  id                String   @id @default(cuid())
+  nom               String
+  description       String?  @db.Text
+
+  // Multi-tenant
+  clientId          String
+  client            Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  dateDebut         DateTime
+  dateFin           DateTime
+
+  budgetTotal       Int      // Budget alloué à cette roadmap
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  projects          RoadmapProject[]
+
+  @@index([clientId])
+}
+
+// Table de liaison Roadmap <-> Project (many-to-many)
+model RoadmapProject {
+  id                String   @id @default(cuid())
+
+  roadmapId         String
+  roadmap           Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  projectId         String
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  ordre             Int      // Ordre d'exécution dans la roadmap
+  dateDebutPrevue   DateTime?
+  dateFinPrevue     DateTime?
+
+  createdAt         DateTime @default(now())
+
+  @@unique([roadmapId, projectId])
+  @@index([roadmapId])
+  @@index([projectId])
+}
