@@ -3,8 +3,39 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
+interface Diagnostics {
+  timestamp: string
+  environment: string | undefined
+  variables: {
+    POSTGRES_HOST: string
+    POSTGRES_USER: string
+    POSTGRES_DATABASE: string
+    POSTGRES_PASSWORD: string
+    DATABASE_URL: string
+  }
+  test1?: {
+    status: string
+    message: string
+  }
+  test2?: {
+    status: string
+    message: string
+    data: unknown
+  }
+  test3?: {
+    status: string
+    message: string
+  }
+  error?: {
+    status: string
+    message: string
+    code?: string
+    name: string
+  }
+}
+
 export async function GET() {
-  const diagnostics: any = {
+  const diagnostics: Diagnostics = {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
     variables: {
@@ -58,12 +89,13 @@ export async function GET() {
       diagnostics
     })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as Error & { code?: string }
     diagnostics.error = {
       status: 'error',
-      message: error.message,
-      code: error.code,
-      name: error.name
+      message: err.message || 'Unknown error',
+      code: err.code,
+      name: err.name || 'Error'
     }
 
     return NextResponse.json({
