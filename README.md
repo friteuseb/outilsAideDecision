@@ -1,8 +1,8 @@
-# 🎯 Outils d'Aide à la Décision
+# Outils d'Aide à la Décision
 
 Plateforme SaaS multi-clients de priorisation de backlog avec interface white-label.
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
 - **Multi-tenant** : Gérez plusieurs clients avec isolation complète des données
 - **White-label** : Personnalisation visuelle par client (logo, couleurs)
@@ -12,7 +12,7 @@ Plateforme SaaS multi-clients de priorisation de backlog avec interface white-la
 - **Export de données** : CSV pour analyse et partage
 - **Interface moderne** : Next.js 14, React, Tailwind CSS
 
-## 🏗️ Stack Technique
+## Stack Technique
 
 - **Frontend** : Next.js 14 (App Router), React 19, TypeScript
 - **Backend** : Next.js API Routes
@@ -21,13 +21,13 @@ Plateforme SaaS multi-clients de priorisation de backlog avec interface white-la
 - **UI** : Tailwind CSS, Lucide Icons
 - **Hosting** : Vercel (recommandé)
 
-## 📋 Prérequis
+## Prérequis
 
 - Node.js 20+ et npm
 - PostgreSQL 14+ (ou utiliser Supabase)
 - Git
 
-## 🚀 Installation
+## Installation
 
 ### 1. Cloner le repository
 
@@ -102,7 +102,7 @@ npm run dev
 
 L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-## 📊 Données de démo
+## Données de démo
 
 Après le seed, vous aurez accès à :
 
@@ -117,7 +117,7 @@ Après le seed, vous aurez accès à :
 
 **Templates** : 10 templates réutilisables (SEO, Cross-selling, Checkout, etc.)
 
-## 📖 Utilisation
+## Utilisation
 
 ### Page d'accueil
 
@@ -141,7 +141,7 @@ Après le seed, vous aurez accès à :
 - Configuration des templates
 - Analytics globales
 
-## 🎨 Personnalisation White-label
+## Personnalisation White-label
 
 Chaque client peut avoir :
 - **Logo personnalisé** : Affiché dans l'header
@@ -165,7 +165,7 @@ Configuration dans la table `Client` :
 }
 ```
 
-## 🔧 Scripts disponibles
+## Scripts disponibles
 
 ```bash
 npm run dev          # Lancer en développement
@@ -179,7 +179,7 @@ npm run db:seed      # Peupler la base de données
 npm run db:studio    # Ouvrir Prisma Studio (GUI)
 ```
 
-## 📁 Structure du projet
+## Structure du projet
 
 ```
 /app
@@ -198,7 +198,7 @@ npm run db:studio    # Ouvrir Prisma Studio (GUI)
   index.ts             # Types TypeScript
 ```
 
-## 🗄️ Modèle de données
+## Modèle de données
 
 ### Entités principales
 
@@ -214,7 +214,7 @@ npm run db:studio    # Ouvrir Prisma Studio (GUI)
 - Un Project appartient à un Client et peut être basé sur un Template
 - Une Roadmap contient plusieurs Projects
 
-## 🚢 Déploiement sur Vercel
+## Déploiement sur Vercel
 
 1. Push votre code sur GitHub
 2. Connectez votre repo sur [vercel.com](https://vercel.com)
@@ -223,7 +223,7 @@ npm run db:studio    # Ouvrir Prisma Studio (GUI)
 
 Vercel détectera automatiquement Next.js et configurera tout.
 
-## 🔐 Authentification (à finaliser)
+## Authentification (à finaliser)
 
 L'authentification Supabase est prête mais pas encore activée. Pour l'activer :
 
@@ -232,7 +232,7 @@ L'authentification Supabase est prête mais pas encore activée. Pour l'activer 
 3. Ajoutez les pages de login/signup
 4. Liez les utilisateurs Supabase aux utilisateurs Prisma via `supabaseId`
 
-## 📈 Prochaines étapes (Roadmap)
+## Prochaines étapes (Roadmap)
 
 - [ ] **Authentification complète** : Login, signup, password reset
 - [ ] **Backoffice admin** : CRUD complet pour clients/users/templates
@@ -243,18 +243,17 @@ L'authentification Supabase est prête mais pas encore activée. Pour l'activer 
 - [ ] **API publique** : REST API pour intégrations externes
 - [ ] **Mobile responsive** : Optimisation pour mobile/tablette
 
-## 🤝 Support
+## Support
 
 Pour toute question ou problème :
 1. Ouvrez une issue sur GitHub
 2. Consultez la documentation Prisma/Next.js
 3. Contactez le développeur
 
-## 📄 Licence
+## Licence
 
 Propriétaire - Tous droits réservés
 
 ---
 
-**Développé avec ❤️ par Cyril Talan**
 Powered by Next.js, Prisma, Supabase
