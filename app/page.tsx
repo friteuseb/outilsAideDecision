@@ -9,16 +9,21 @@ import type { ClientWithRelations } from '@/types'
 export default function HomePage() {
   const [clients, setClients] = useState<ClientWithRelations[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/clients')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch clients')
+        return res.json()
+      })
       .then(data => {
-        setClients(data)
+        setClients(Array.isArray(data) ? data : [])
         setLoading(false)
       })
       .catch(error => {
         console.error('Error loading clients:', error)
+        setError(error.message)
         setLoading(false)
       })
   }, [])
@@ -29,6 +34,27 @@ export default function HomePage() {
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">Chargement des clients...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg max-w-md">
+          <div className="text-red-600 text-5xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Erreur de connexion</h2>
+          <p className="text-gray-600 mb-4">
+            Impossible de charger les données. Vérifiez que la base de données est configurée.
+          </p>
+          <p className="text-sm text-gray-500 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Réessayer
+          </button>
         </div>
       </div>
     )

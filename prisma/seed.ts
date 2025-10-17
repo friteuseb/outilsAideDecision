@@ -177,6 +177,7 @@ async function main() {
     data: {
       nom: 'Acme E-commerce',
       slug: 'acme',
+      logo: null,
       couleurPrimaire: '#E63946',
       couleurSecondaire: '#1D3557',
       statut: 'ACTIF',
