@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Download, Search, Settings2, Loader2, Plus } from 'lucide-react'
+import { ArrowLeft, Download, Search, Settings2, Loader2 } from 'lucide-react'
 import type { Client, ProjectWithRelations } from '@/types'
 import { formatCurrency, calculateBudgetScore } from '@/lib/utils'
 
@@ -15,13 +15,8 @@ type ProjectScores = {
   [key: string]: number
 }
 
-type ProjectWithScore = ProjectWithRelations & {
-  score: number
-}
-
 export default function ClientBacklogPage() {
   const params = useParams()
-  const router = useRouter()
   const slug = params.slug as string
 
   const [client, setClient] = useState<Client | null>(null)
