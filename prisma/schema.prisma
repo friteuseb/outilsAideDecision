@@ -49,15 +49,13 @@ model User {
   nom           String
   prenom        String?
   avatar        String?  // URL de l'avatar
+  password      String?  // Hash bcrypt du mot de passe
 
   role          UserRole @default(VIEWER)
 
   // Multi-tenant : un utilisateur appartient à un client
   clientId      String
   client        Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
-
-  // Auth Supabase
-  supabaseId    String?  @unique // ID utilisateur Supabase
 
   preferences   Json     @default("{}") // Préférences utilisateur (langue, thème, etc.)
 
@@ -71,7 +69,6 @@ model User {
 
   @@index([clientId])
   @@index([email])
-  @@index([supabaseId])
 }
 
 enum UserRole {
