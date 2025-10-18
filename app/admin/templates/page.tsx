@@ -9,9 +9,9 @@ type Template = {
   titre: string
   categorie: string
   description: string
-  budget: number
-  delaiSemaines: number
-  kpi: string
+  budgetMoyen: number | null
+  delaiMoyen: number | null
+  kpiSuggeres: string[]
   secteur: string | null
   _count?: {
     projects: number
@@ -123,14 +123,18 @@ export default function TemplatesPage() {
                   </p>
 
                   <div className="space-y-2 text-sm text-gray-700 mb-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Budget:</span>
-                      <span className="font-semibold">{template.budget.toLocaleString()}€</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Délai:</span>
-                      <span className="font-semibold">{template.delaiSemaines} semaines</span>
-                    </div>
+                    {template.budgetMoyen && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Budget:</span>
+                        <span className="font-semibold">{template.budgetMoyen.toLocaleString()}€</span>
+                      </div>
+                    )}
+                    {template.delaiMoyen && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Délai:</span>
+                        <span className="font-semibold">{template.delaiMoyen} semaines</span>
+                      </div>
+                    )}
                     {template.secteur && (
                       <div className="flex justify-between">
                         <span className="text-gray-500">Secteur:</span>

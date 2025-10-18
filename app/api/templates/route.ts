@@ -33,12 +33,11 @@ export async function POST(request: Request) {
       titre,
       categorie,
       description,
-      budget,
-      delaiSemaines,
-      kpi,
-      scores,
-      secteur,
-      additionalInfo
+      budgetMoyen,
+      delaiMoyen,
+      kpiSuggeres,
+      scoresDefaults,
+      secteur
     } = body
 
     const template = await prisma.template.create({
@@ -46,12 +45,11 @@ export async function POST(request: Request) {
         titre,
         categorie,
         description,
-        budget,
-        delaiSemaines,
-        kpi,
-        scores: scores || { impactBusiness: 5, complexite: 5 },
-        secteur,
-        additionalInfo
+        budgetMoyen,
+        delaiMoyen,
+        kpiSuggeres: kpiSuggeres || [],
+        scoresDefaults: scoresDefaults || { impactBusiness: 5, complexite: 5 },
+        secteur
       }
     })
 

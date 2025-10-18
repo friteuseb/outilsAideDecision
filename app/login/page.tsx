@@ -30,7 +30,7 @@ export default function LoginPage() {
         router.push('/') // Redirect to home after successful login
         router.refresh()
       }
-    } catch (error) {
+    } catch {
       setError('Une erreur est survenue')
     } finally {
       setLoading(false)
