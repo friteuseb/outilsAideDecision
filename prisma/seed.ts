@@ -6,6 +6,14 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Starting seed...')
 
+  // Clean existing data (optional - comment out to keep existing data)
+  console.log('Cleaning existing data...')
+  await prisma.project.deleteMany()
+  await prisma.user.deleteMany()
+  await prisma.client.deleteMany()
+  await prisma.template.deleteMany()
+  console.log('✅ Data cleaned')
+
   // 1. Créer des templates réutilisables
   console.log('Creating templates...')
 
